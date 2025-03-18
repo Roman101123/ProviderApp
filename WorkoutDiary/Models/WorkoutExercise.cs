@@ -2,6 +2,8 @@
 {
     public class WorkoutExercise
     {
+        public int Id { get; set; } // Новый первичный ключ
+
         public int WorkoutId { get; set; }
         public Workout Workout { get; set; }
 

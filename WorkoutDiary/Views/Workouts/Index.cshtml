@@ -37,8 +37,8 @@
                     {
                         <li>
                             @we.Exercise.Name - Подходы: @we.Sets, Повторения: @we.Reps, Вес: @we.Weight кг
-                            <a asp-action="EditExercise" asp-route-workoutId="@we.WorkoutId" asp-route-exerciseId="@we.ExerciseId">Редактировать</a> |
-                            <a asp-action="DeleteExercise" asp-route-workoutId="@we.WorkoutId" asp-route-exerciseId="@we.ExerciseId" onclick="return confirm('Вы уверены, что хотите удалить это упражнение?')">Удалить</a>
+                            <a asp-action="EditExercise" asp-route-id="@we.Id">Редактировать</a> |
+                            <a asp-action="DeleteExercise" asp-route-id="@we.Id" onclick="return confirm('Вы уверены, что хотите удалить это упражнение?')">Удалить</a>
                         </li>
                     }
                 </ul>

@@ -15,11 +15,6 @@ namespace WorkoutDiary.Data
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
 
-        // Опционально: настройка составного ключа для WorkoutExercise
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<WorkoutExercise>()
-                .HasKey(we => new { we.WorkoutId, we.ExerciseId });
-        }
+        // Убираем настройку составного ключа, так как теперь есть Id
     }
 }

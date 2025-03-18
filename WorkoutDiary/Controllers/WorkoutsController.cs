@@ -117,12 +117,12 @@ namespace WorkoutDiary.Controllers
 
         // Редактирование упражнения (GET)
         [HttpGet]
-        public IActionResult EditExercise(int workoutId, int exerciseId)
+        public IActionResult EditExercise(int id)
         {
             var workoutExercise = _context.WorkoutExercises
                 .Include(we => we.Exercise)
-                .FirstOrDefault(we => we.WorkoutId == workoutId && we.ExerciseId == exerciseId);
-            if (workoutExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutId && w.UserId == GetCurrentUserId()) == null)
+                .FirstOrDefault(we => we.Id == id);
+            if (workoutExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutExercise.WorkoutId && w.UserId == GetCurrentUserId()) == null)
             {
                 return NotFound();
             }
@@ -135,7 +135,7 @@ namespace WorkoutDiary.Controllers
         public IActionResult EditExercise(WorkoutExercise workoutExercise)
         {
             var existingExercise = _context.WorkoutExercises
-                .FirstOrDefault(we => we.WorkoutId == workoutExercise.WorkoutId && we.ExerciseId == workoutExercise.ExerciseId);
+                .FirstOrDefault(we => we.Id == workoutExercise.Id);
             if (existingExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutExercise.WorkoutId && w.UserId == GetCurrentUserId()) == null)
             {
                 return NotFound();
@@ -149,17 +149,17 @@ namespace WorkoutDiary.Controllers
 
         // Удаление упражнения
         [HttpGet]
-        public IActionResult DeleteExercise(int workoutId, int exerciseId)
+        public IActionResult DeleteExercise(int id)
         {
             var workoutExercise = _context.WorkoutExercises
-                .FirstOrDefault(we => we.WorkoutId == workoutId && we.ExerciseId == exerciseId);
-            if (workoutExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutId && w.UserId == GetCurrentUserId()) == null)
+                .FirstOrDefault(we => we.Id == id);
+            if (workoutExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutExercise.WorkoutId && w.UserId == GetCurrentUserId()) == null)
             {
                 return NotFound();
             }
             _context.WorkoutExercises.Remove(workoutExercise);
             _context.SaveChanges();
-            return RedirectToAction("Edit", new { id = workoutId });
+            return RedirectToAction("Edit", new { id = workoutExercise.WorkoutId });
         }
 
         private int GetCurrentUserId()

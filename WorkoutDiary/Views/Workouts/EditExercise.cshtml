@@ -6,6 +6,7 @@
 <h2>Редактирование упражнения "@Model.Exercise.Name"</h2>
 
 <form asp-action="EditExercise" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
     <input type="hidden" name="WorkoutId" value="@Model.WorkoutId" />
     <input type="hidden" name="ExerciseId" value="@Model.ExerciseId" />
     <div>

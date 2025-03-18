@@ -1,0 +1,27 @@
+﻿@model WorkoutDiary.Models.WorkoutExercise
+@{
+    ViewData["Title"] = "Редактирование упражнения";
+}
+
+<h2>Редактирование упражнения "@Model.Exercise.Name"</h2>
+
+<form asp-action="EditExercise" method="post">
+    <input type="hidden" name="WorkoutId" value="@Model.WorkoutId" />
+    <input type="hidden" name="ExerciseId" value="@Model.ExerciseId" />
+    <div>
+        <label>Подходы</label>
+        <input type="number" name="Sets" value="@Model.Sets" required min="1" />
+    </div>
+    <div>
+        <label>Повторения</label>
+        <input type="number" name="Reps" value="@Model.Reps" required min="1" />
+    </div>
+    <div>
+        <label>Вес (кг)</label>
+        <input type="number" name="Weight" value="@Model.Weight" step="0.1" required min="0" />
+    </div>
+    <div style="margin-top: 10px;">
+        <button type="submit">Сохранить</button>
+        <a asp-action="Edit" asp-route-id="@Model.WorkoutId">Назад</a>
+    </div>
+</form>

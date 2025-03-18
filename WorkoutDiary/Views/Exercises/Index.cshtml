@@ -1,0 +1,17 @@
+﻿@model List<WorkoutDiary.Models.Exercise>
+@{
+    ViewData["Title"] = "Список упражнений";
+}
+
+<h2>Список упражнений</h2>
+
+<a asp-action="Create">Добавить новое упражнение</a>
+
+<ul>
+    @foreach (var exercise in Model)
+    {
+        <li>@exercise.Name</li>
+    }
+</ul>
+
+<a asp-controller="Workouts" asp-action="Index">Вернуться к дневнику</a>

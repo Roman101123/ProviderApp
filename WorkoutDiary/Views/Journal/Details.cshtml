@@ -1,6 +1,7 @@
 ﻿@model WorkoutDiary.Models.JournalEntry
 @{
     ViewData["Title"] = Model.Title;
+    bool isAuthor = ViewBag.IsAuthor ?? false; // Используем ViewBag
 }
 
 <div class="entry-details">
@@ -17,6 +18,16 @@
         <p>Дата создания: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
     </div>
 </div>
+
+@if (isAuthor)
+{
+    <div class="actions">
+        <a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+        <form method="post" asp-action="Delete" asp-route-id="@Model.Id" onsubmit="return confirm('Вы уверены, что хотите удалить эту запись?');">
+            <button type="submit">Удалить</button>
+        </form>
+    </div>
+}
 
 <style>
     .entry-details {
@@ -37,5 +48,20 @@
         .right img {
             max-width: 100%;
             height: auto;
+        }
+
+    .actions {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .actions a, .actions button {
+            margin: 0 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
 </style>

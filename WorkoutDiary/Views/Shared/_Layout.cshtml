@@ -20,6 +20,12 @@
             position: fixed;
             bottom: 0;
             width: 100%;
+            height: 40px;
+        }
+
+        main {
+            padding-bottom: 60px;
+            min-height: calc(100vh - 100px);
         }
     </style>
 </head>
@@ -28,7 +34,7 @@
         <nav>
             <a asp-controller="Home" asp-action="Index">Главная</a>
             <a asp-controller="Workouts" asp-action="Index">Дневник</a>
-            <a asp-controller="Journal" asp-action="Index">Журнал</a> <!-- Добавлено -->
+            <a asp-controller="Journal" asp-action="Index">Журнал</a>
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Account" asp-action="Profile">Профиль</a>
@@ -51,7 +57,7 @@
         @RenderBody()
     </main>
     <footer>
-        <p>© 2025 Дневник тренировок</p>
+        <p>© 2023 Дневник тренировок</p>
     </footer>
 </body>
 </html>

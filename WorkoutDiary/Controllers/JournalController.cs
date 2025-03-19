@@ -76,9 +76,71 @@ namespace WorkoutDiary.Controllers
             {
                 return NotFound();
             }
+            ViewBag.IsAuthor = entry.AuthorId == GetCurrentUserId(); // Добавляем флаг в ViewBag
             return View(entry);
         }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var entry = _context.JournalEntries
+                .Include(e => e.Author)
+                .FirstOrDefault(e => e.Id == id);
+            if (entry == null)
+            {
+                return NotFound();
+            }
+            if (entry.AuthorId != GetCurrentUserId())
+            {
+                return Forbid(); // Запрещаем доступ, если пользователь не автор
+            }
+            return View(entry);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, string title, string content, IFormFile image)
+        {
+            var entry = _context.JournalEntries.FirstOrDefault(e => e.Id == id);
+            if (entry == null)
+            {
+                return NotFound();
+            }
+            if (entry.AuthorId != GetCurrentUserId())
+            {
+                return Forbid();
+            }
 
+            entry.Title = title;
+            entry.Content = content;
+
+            if (image != null && image.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await image.CopyToAsync(memoryStream);
+                    entry.Image = memoryStream.ToArray();
+                }
+            }
+
+            _context.JournalEntries.Update(entry);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = entry.Id });
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var entry = _context.JournalEntries.FirstOrDefault(e => e.Id == id);
+            if (entry == null)
+            {
+                return NotFound();
+            }
+            if (entry.AuthorId != GetCurrentUserId())
+            {
+                return Forbid();
+            }
+
+            _context.JournalEntries.Remove(entry);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
         private int GetCurrentUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

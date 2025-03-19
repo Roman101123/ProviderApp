@@ -1,0 +1,116 @@
+﻿@model WorkoutDiary.Models.JournalEntry
+@{
+    ViewData["Title"] = "Редактировать запись";
+}
+
+<h1>Редактировать запись</h1>
+
+<form method="post" enctype="multipart/form-data" class="entry-details">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="left">
+        <label for="title">Название:</label>
+        <input type="text" id="title" name="title" value="@Model.Title" required />
+        <br />
+        <label for="content">Текст записи:</label>
+        <textarea id="content" name="content" required>@Model.Content</textarea>
+    </div>
+    <div class="right">
+        <div class="image-frame">
+            @if (Model.Image != null)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image)" alt="@Model.Title" />
+            }
+            else
+            {
+                <div class="placeholder">Нет изображения</div>
+            }
+        </div>
+        <label for="image">Изменить изображение:</label>
+        <input type="file" id="image" name="image" accept="image/*" />
+        <p>Автор: @Model.Author.Username</p>
+        <p>Дата создания: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+    </div>
+    <div class="actions">
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+
+<style>
+    .entry-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .left {
+        flex: 1;
+        padding: 10px;
+        min-width: 300px;
+    }
+
+    .right {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 300px;
+    }
+
+    .image-frame {
+        width: 300px; /* Фиксированная ширина рамки */
+        height: 300px; /* Фиксированная высота рамки */
+        border: 1px solid #ccc; /* Для отладки можно сделать видимой */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+        .image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Изображение заполняет рамку */
+        }
+
+        .image-frame .placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+    .right label, .right input {
+        margin: 5px 0;
+    }
+
+    .right p {
+        margin: 5px 0;
+    }
+
+    .actions {
+        text-align: center;
+        margin-top: 20px;
+        padding-bottom: 20px;
+        width: 100%;
+    }
+
+        .actions button {
+            padding: 5px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+    .left input, .left textarea {
+        width: 100%;
+        padding: 5px;
+        margin-top: 5px;
+    }
+
+    .left textarea {
+        height: 200px;
+        resize: vertical;
+    }
+</style>

@@ -66,15 +66,15 @@
                                         string backgroundColor = "";
                                         if (isSelected)
                                         {
-                                            backgroundColor = "background-color: #4caf50;"; // Зеленый для выбранного дня
+                                            backgroundColor = "background-color: #4caf50;";
                                         }
                                         else if (isToday)
                                         {
-                                            backgroundColor = "background-color: #ffeb3b;"; // Желтый для текущего дня
+                                            backgroundColor = "background-color: #ffeb3b;";
                                         }
                                         else if (hasWorkout)
                                         {
-                                            backgroundColor = "background-color: #2196f3;"; // Синий для дней с тренировками
+                                            backgroundColor = "background-color: #2196f3;";
                                         }
 
                                         <td style="text-align: center; @backgroundColor">
@@ -136,6 +136,7 @@
                 <!-- Форма для добавления упражнения -->
                 <form asp-action="AddExercise" method="post">
                     <input type="hidden" name="workoutId" value="@workout.Id" />
+                    <input type="hidden" name="Date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
                     <select name="exerciseId">
                         @foreach (var exercise in ViewBag.Exercises)
                         {

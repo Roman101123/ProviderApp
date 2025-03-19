@@ -31,7 +31,6 @@ namespace WorkoutDiary.Controllers
                 .Where(w => w.Date.Date == selectedDate.Date && w.UserId == GetCurrentUserId())
                 .ToList();
 
-            // Получаем список дат с тренировками для текущего месяца
             var workoutDates = _context.Workouts
                 .Where(w => w.UserId == GetCurrentUserId() && w.Date.Year == currentYear && w.Date.Month == currentMonth)
                 .Select(w => w.Date.Date)
@@ -71,9 +70,8 @@ namespace WorkoutDiary.Controllers
             return RedirectToAction("Index", new { date = Date });
         }
 
-        // Остальные методы остаются без изменений
         [HttpPost]
-        public IActionResult AddExercise(int workoutId, int exerciseId, int sets, int reps, double weight)
+        public IActionResult AddExercise(int workoutId, int exerciseId, int sets, int reps, double weight, DateTime Date)
         {
             var workoutExercise = new WorkoutExercise
             {
@@ -85,7 +83,9 @@ namespace WorkoutDiary.Controllers
             };
             _context.WorkoutExercises.Add(workoutExercise);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+
+            // Перенаправляем обратно на выбранную дату
+            return RedirectToAction("Index", new { date = Date });
         }
 
         [HttpGet]

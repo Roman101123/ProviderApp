@@ -12,13 +12,6 @@
     var workoutDates = (List<DateTime>)ViewBag.WorkoutDates;
 }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
 <div style="display: flex;">
     <!-- Календарь -->
     <div style="width: 30%; padding: 10px;">
@@ -143,10 +136,7 @@
                             Подходы: <input type="number" class="edit-sets" value="@we.Sets" min="1" style="width: 50px;" />,
                             Повторения: <input type="number" class="edit-reps" value="@we.Reps" min="1" style="width: 50px;" />,
                             Вес: <input type="number" class="edit-weight" value="@we.Weight" step="0.1" min="0" style="width: 70px;" /> кг
-                            <form asp-action="DeleteExercise" method="post" style="display: inline;">
-                                <input type="hidden" name="id" value="@we.Id" />
-                                <button type="submit" class="btn btn-link" onclick="return confirm('Вы уверены, что хотите удалить это упражнение?')">Удалить</button>
-                            </form>
+                            <a asp-action="DeleteExercise" asp-route-id="@we.Id" onclick="return confirm('Удалить упражнение?')">Удалить</a>
                             <span class="save-status" style="margin-left: 10px; color: green; display: none;">✓</span>
                         </li>
                     }

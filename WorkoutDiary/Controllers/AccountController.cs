@@ -114,6 +114,15 @@ namespace WorkoutDiary.Controllers
             {
                 return NotFound();
             }
+
+            // Получаем записи пользователя из JournalEntries
+            var userEntries = _context.JournalEntries
+                .Where(e => e.AuthorId == userId)
+                .ToList();
+
+            // Передаем записи через ViewBag или создаем модель представления
+            ViewBag.UserEntries = userEntries;
+
             return View(user);
         }
 

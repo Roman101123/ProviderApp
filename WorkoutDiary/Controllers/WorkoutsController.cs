@@ -179,6 +179,19 @@ namespace WorkoutDiary.Controllers
             return RedirectToAction("Edit", new { id = workoutExercise.WorkoutId });
         }
 
+        [HttpPost]
+        public IActionResult UpdateNote(int id, string note)
+        {
+            var existingWorkout = _context.Workouts
+                .FirstOrDefault(w => w.Id == id && w.UserId == GetCurrentUserId());
+
+            if (existingWorkout == null) return NotFound();
+
+            existingWorkout.Note = note;
+            _context.SaveChanges();
+            return Ok();
+        }
+
         private int GetCurrentUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

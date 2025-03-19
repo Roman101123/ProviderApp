@@ -120,7 +120,13 @@
         {
             <div style="border: 1px solid #ccc; margin: 10px 0; padding: 10px;">
                 <h3>Тренировка #@workout.Id</h3>
-                <p>@workout.Note</p>
+
+                <!-- Измененная секция: редактируемая заметка -->
+                <p>
+                    <textarea class="editable-note" data-workout-id="@workout.Id"
+                              style="width: 100%;">@workout.Note</textarea>
+                </p>
+
                 <h4>Упражнения:</h4>
                 <ul>
                     @foreach (var we in workout.WorkoutExercises)
@@ -149,9 +155,8 @@
                     <button type="submit">Добавить</button>
                 </form>
 
-                <!-- Кнопки редактирования и удаления тренировки -->
+                <!-- Удаленная кнопка редактирования -->
                 <div style="margin-top: 10px;">
-                    <a asp-action="Edit" asp-route-id="@workout.Id">Редактировать</a> |
                     <a asp-action="Delete" asp-route-id="@workout.Id" onclick="return confirm('Вы уверены, что хотите удалить эту тренировку?')">Удалить</a>
                 </div>
             </div>
@@ -161,6 +166,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Обработка создания тренировки
         const noteInput = document.getElementById("noteInput");
         const submitButton = document.getElementById("submitButton");
 
@@ -168,5 +174,35 @@
         noteInput.addEventListener("input", function () {
             submitButton.disabled = noteInput.value.trim() === "";
         });
+
+        // Новый код: обработка изменений заметки
+        document.querySelectorAll('.editable-note').forEach(element => {
+            element.addEventListener('input', debounce(function (e) {
+                const workoutId = e.target.getAttribute('data-workout-id');
+                const newNote = e.target.value;
+
+                fetch(`/Workouts/UpdateNote?id=${workoutId}&note=${encodeURIComponent(newNote)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Ошибка сохранения');
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                    });
+            }, 500));
+        });
     });
+
+    // Функция для предотвращения частых запросов
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
 </script>

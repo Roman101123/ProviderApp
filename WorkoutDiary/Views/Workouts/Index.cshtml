@@ -143,15 +143,28 @@
                 </ul>
 
                 <!-- Форма для добавления упражнения -->
-                <form asp-action="AddExercise" method="post">
+                <form asp-action="AddExercise" method="post" class="add-exercise-form">
                     <input type="hidden" name="workoutId" value="@workout.Id" />
                     <input type="hidden" name="Date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
-                    <select name="exerciseId">
-                        @foreach (var exercise in ViewBag.Exercises)
-                        {
-                            <option value="@exercise.Id">@exercise.Name</option>
-                        }
-                    </select>
+
+                    <div class="exercise-autocomplete">
+                        <input type="text"
+                               name="exerciseName"
+                               class="exercise-input"
+                               placeholder="Начните вводить название..."
+                               list="exercisesList"
+                               autocomplete="off"
+                               required
+                               minlength="3" />
+                        <datalist id="exercisesList">
+                            @foreach (var exercise in ViewBag.Exercises)
+                            {
+                                <option value="@exercise.Name" data-id="@exercise.Id"></option>
+                            }
+                        </datalist>
+                        <span class="error-message" id="exerciseError"></span>
+                    </div>
+
                     <input type="number" name="sets" placeholder="Подходы" required min="1" />
                     <input type="number" name="reps" placeholder="Повторения" required min="1" />
                     <input type="number" name="weight" placeholder="Вес (кг)" step="0.1" required min="0" />
@@ -236,6 +249,43 @@
             repsInput.addEventListener('change', debounce(updateExercise, 500));
             weightInput.addEventListener('change', debounce(updateExercise, 500));
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Обработка автодополнения упражнений
+            document.querySelectorAll('.exercise-input').forEach(input => {
+                input.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase();
+                    const datalist = document.getElementById('exercisesList');
+
+                    // Фильтрация упражнений (уже реализована через datalist)
+                    // Добавляем скрытое поле для exerciseId при выборе из списка
+                    this.addEventListener('change', function () {
+                        const selectedOption = Array.from(datalist.options).find(
+                            opt => opt.value === this.value
+                        );
+                        if (selectedOption) {
+                            this.dataset.exerciseId = selectedOption.dataset.id;
+                        }
+                    });
+                });
+            });
+        });
+
+        document.querySelectorAll('.add-exercise-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const exerciseInput = this.querySelector('.exercise-input');
+                if (exerciseInput.value.trim().length < 3) {
+                    e.preventDefault();
+                    document.getElementById('exerciseError').textContent =
+                        'Название должно содержать минимум 3 символа';
+                }
+            });
+
+            // Сброс ошибки при вводе
+            form.querySelector('.exercise-input').addEventListener('input', function () {
+                document.getElementById('exerciseError').textContent = '';
+            });
+        });
     });
 
     // Функция для предотвращения частых запросов
@@ -247,3 +297,26 @@
         };
     }
 </script>
+
+<style>
+    /* Стили для автокомплита */
+    .exercise-autocomplete {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .exercise-input {
+        width: 200px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    /* Стили для ошибок */
+    .error-message {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+</style>

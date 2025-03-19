@@ -71,20 +71,56 @@ namespace WorkoutDiary.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddExercise(int workoutId, int exerciseId, int sets, int reps, double weight, DateTime Date)
+        public IActionResult AddExercise(int workoutId, string exerciseName, int sets, int reps, double weight, DateTime Date)
         {
+            // Валидация названия
+            if (string.IsNullOrWhiteSpace(exerciseName) || exerciseName.Length < 3)
+            {
+                return BadRequest("Название упражнения должно содержать минимум 3 символа");
+            }
+
+            // Поиск упражнения
+            var userId = GetCurrentUserId();
+            var exercise = _context.Exercises
+                .FirstOrDefault(e =>
+                    e.Name.ToLower() == exerciseName.Trim().ToLower() &&
+                    (e.UserId == userId || e.IsDefault)
+                );
+
+            // Создание нового упражнения
+            if (exercise == null)
+            {
+                exercise = new Exercise
+                {
+                    Name = exerciseName.Trim(),
+                    UserId = userId,
+                    IsDefault = false
+                };
+                _context.Exercises.Add(exercise);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException ex)
+                {
+                    return BadRequest("Ошибка при сохранении упражнения: " + ex.InnerException?.Message);
+                }
+            }
+
+            // Добавление в тренировку
             var workoutExercise = new WorkoutExercise
             {
                 WorkoutId = workoutId,
-                ExerciseId = exerciseId,
+                ExerciseId = exercise.Id,
                 Sets = sets,
                 Reps = reps,
                 Weight = weight
             };
+
             _context.WorkoutExercises.Add(workoutExercise);
             _context.SaveChanges();
 
-            // Перенаправляем обратно на выбранную дату
             return RedirectToAction("Index", new { date = Date });
         }
 

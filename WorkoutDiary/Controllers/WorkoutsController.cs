@@ -192,9 +192,41 @@ namespace WorkoutDiary.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [AcceptVerbs("Post")]
+        public IActionResult UpdateExercise([FromBody] WorkoutExerciseUpdateDto dto)
+        {
+            var exercise = _context.WorkoutExercises
+                .Include(we => we.Workout)
+                .FirstOrDefault(we => we.Id == dto.Id);
+
+            if (exercise == null || exercise.Workout.UserId != GetCurrentUserId())
+                return NotFound();
+
+            exercise.Sets = dto.Sets;
+            exercise.Reps = dto.Reps;
+            exercise.Weight = dto.Weight;
+
+            try
+            {
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         private int GetCurrentUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
+    }
+    public class WorkoutExerciseUpdateDto
+    {
+        public int Id { get; set; }
+        public int Sets { get; set; }
+        public int Reps { get; set; }
+        public double Weight { get; set; }
     }
 }

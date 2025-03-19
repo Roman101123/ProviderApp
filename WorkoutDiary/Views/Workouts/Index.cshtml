@@ -131,10 +131,13 @@
                 <ul>
                     @foreach (var we in workout.WorkoutExercises)
                     {
-                        <li>
-                            @we.Exercise.Name - Подходы: @we.Sets, Повторения: @we.Reps, Вес: @we.Weight кг
-                            <a asp-action="EditExercise" asp-route-id="@we.Id">Редактировать</a> |
-                            <a asp-action="DeleteExercise" asp-route-id="@we.Id" onclick="return confirm('Вы уверены, что хотите удалить это упражнение?')">Удалить</a>
+                        <li class="exercise-item" data-exercise-id="@we.Id">
+                            @we.Exercise.Name -
+                            Подходы: <input type="number" class="edit-sets" value="@we.Sets" min="1" style="width: 50px;" />,
+                            Повторения: <input type="number" class="edit-reps" value="@we.Reps" min="1" style="width: 50px;" />,
+                            Вес: <input type="number" class="edit-weight" value="@we.Weight" step="0.1" min="0" style="width: 70px;" /> кг
+                            <a asp-action="DeleteExercise" asp-route-id="@we.Id" onclick="return confirm('Удалить упражнение?')">Удалить</a>
+                            <span class="save-status" style="margin-left: 10px; color: green; display: none;">✓</span>
                         </li>
                     }
                 </ul>
@@ -194,6 +197,44 @@
                         alert(error.message);
                     });
             }, 500));
+        });
+
+        document.querySelectorAll('.exercise-item').forEach(item => {
+            const exerciseId = item.dataset.exerciseId;
+            const setsInput = item.querySelector('.edit-sets');
+            const repsInput = item.querySelector('.edit-reps');
+            const weightInput = item.querySelector('.edit-weight');
+            const status = item.querySelector('.save-status');
+
+            function updateExercise() {
+                const data = {
+                    id: exerciseId,
+                    sets: parseInt(setsInput.value),
+                    reps: parseInt(repsInput.value),
+                    weight: parseFloat(weightInput.value)
+                };
+
+                fetch('/Workouts/UpdateExercise', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            status.style.display = 'inline';
+                            setTimeout(() => status.style.display = 'none', 2000);
+                        } else {
+                            alert('Ошибка сохранения');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
+            setsInput.addEventListener('change', debounce(updateExercise, 500));
+            repsInput.addEventListener('change', debounce(updateExercise, 500));
+            weightInput.addEventListener('change', debounce(updateExercise, 500));
         });
     });
 

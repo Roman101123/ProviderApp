@@ -201,18 +201,25 @@ namespace WorkoutDiary.Controllers
             return RedirectToAction("Edit", new { id = workoutExercise.WorkoutId });
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult DeleteExercise(int id)
         {
             var workoutExercise = _context.WorkoutExercises
+                .Include(we => we.Workout)
                 .FirstOrDefault(we => we.Id == id);
+
             if (workoutExercise == null || _context.Workouts.FirstOrDefault(w => w.Id == workoutExercise.WorkoutId && w.UserId == GetCurrentUserId()) == null)
             {
                 return NotFound();
             }
+
+            var workoutDate = workoutExercise.Workout.Date;
+
             _context.WorkoutExercises.Remove(workoutExercise);
             _context.SaveChanges();
-            return RedirectToAction("Edit", new { id = workoutExercise.WorkoutId });
+
+            TempData["SuccessMessage"] = "Упражнение успешно удалено.";
+            return RedirectToAction("Index", new { date = workoutDate.ToString("yyyy-MM-dd") });
         }
 
         [HttpPost]

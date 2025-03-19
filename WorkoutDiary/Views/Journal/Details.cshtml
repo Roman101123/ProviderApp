@@ -1,0 +1,41 @@
+﻿@model WorkoutDiary.Models.JournalEntry
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="entry-details">
+    <div class="left">
+        <h1>@Model.Title</h1>
+        <p>@Model.Content</p>
+    </div>
+    <div class="right">
+        @if (Model.Image != null)
+        {
+            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image)" alt="@Model.Title" />
+        }
+        <p>Автор: @Model.Author.Username</p>
+        <p>Дата создания: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+    </div>
+</div>
+
+<style>
+    .entry-details {
+        display: flex;
+    }
+
+    .left {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .right {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+    }
+
+        .right img {
+            max-width: 100%;
+            height: auto;
+        }
+</style>

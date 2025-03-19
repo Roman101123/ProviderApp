@@ -102,6 +102,36 @@ namespace WorkoutDiary.Migrations
                         });
                 });
 
+            modelBuilder.Entity("WorkoutDiary.Models.JournalEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("JournalEntries");
+                });
+
             modelBuilder.Entity("WorkoutDiary.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -187,6 +217,17 @@ namespace WorkoutDiary.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WorkoutDiary.Models.JournalEntry", b =>
+                {
+                    b.HasOne("WorkoutDiary.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("WorkoutDiary.Models.Workout", b =>

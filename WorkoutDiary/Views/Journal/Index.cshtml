@@ -1,0 +1,45 @@
+﻿@model List<WorkoutDiary.Models.JournalEntry>
+@{
+    ViewData["Title"] = "Журнал тренировок";
+}
+
+<h1>Журнал тренировок</h1>
+
+<form method="get" action="@Url.Action("Index")">
+    <input type="text" name="search" placeholder="Поиск по названию" value="@ViewBag.Search" />
+    <button type="submit">Поиск</button>
+</form>
+
+<a asp-action="Create">Добавить запись</a>
+
+<div class="entries">
+    @foreach (var entry in Model)
+    {
+        <div class="entry-tile">
+            @if (entry.Image != null)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" />
+            }
+            <h3>@entry.Title</h3>
+            <a asp-action="Details" asp-route-id="@entry.Id">Подробнее</a>
+        </div>
+    }
+</div>
+
+<style>
+    .entries {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .entry-tile {
+        margin: 10px;
+        text-align: center;
+    }
+
+        .entry-tile img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+</style>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WorkoutDiary.Migrations
 {
     /// <inheritdoc />
-    public partial class AddAvatarAndCreatedAtToUser : Migration
+    public partial class AddJournalEntry : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,6 +47,29 @@ namespace WorkoutDiary.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JournalEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: false),
+                    Image = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JournalEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JournalEntries_Users_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,6 +145,11 @@ namespace WorkoutDiary.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JournalEntries_AuthorId",
+                table: "JournalEntries",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WorkoutExercises_ExerciseId",
                 table: "WorkoutExercises",
                 column: "ExerciseId");
@@ -140,6 +168,9 @@ namespace WorkoutDiary.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "JournalEntries");
+
             migrationBuilder.DropTable(
                 name: "WorkoutExercises");
 

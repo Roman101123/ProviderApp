@@ -14,6 +14,7 @@ namespace WorkoutDiary.Data
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
+        public DbSet<JournalEntry> JournalEntries { get; set; } // Добавлено
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

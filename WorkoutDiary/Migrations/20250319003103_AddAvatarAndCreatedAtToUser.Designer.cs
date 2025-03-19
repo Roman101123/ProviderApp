@@ -11,8 +11,8 @@ using WorkoutDiary.Data;
 namespace WorkoutDiary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250318234802_InitialCreateWithDefaultExercises")]
-    partial class InitialCreateWithDefaultExercises
+    [Migration("20250319003103_AddAvatarAndCreatedAtToUser")]
+    partial class AddAvatarAndCreatedAtToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,12 @@ namespace WorkoutDiary.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("BLOB");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

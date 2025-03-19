@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkoutDiary.Data;
 using WorkoutDiary.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorkoutDiary.Controllers
 {
@@ -19,7 +21,7 @@ namespace WorkoutDiary.Controllers
             // Тестовый пользователь (можно убрать после проверки регистрации)
             if (!_context.Users.Any())
             {
-                _context.Users.Add(new User { Username = "test", PasswordHash = "test" });
+                _context.Users.Add(new User { Username = "test", PasswordHash = "test", CreatedAt = DateTime.UtcNow });
                 _context.SaveChanges();
             }
         }
@@ -69,30 +71,27 @@ namespace WorkoutDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string username, string password, string confirmPassword)
         {
-            // Проверка совпадения паролей
             if (password != confirmPassword)
             {
                 ViewBag.Error = "Пароли не совпадают";
                 return View();
             }
 
-            // Проверка, существует ли пользователь
             if (_context.Users.Any(u => u.Username == username))
             {
                 ViewBag.Error = "Пользователь с таким именем уже существует";
                 return View();
             }
 
-            // Создание нового пользователя
             var user = new User
             {
                 Username = username,
-                PasswordHash = password // В реальном проекте используйте хэширование
+                PasswordHash = password, // В реальном проекте используйте хэширование
+                CreatedAt = DateTime.UtcNow
             };
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            // Автоматическая авторизация после регистрации
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
@@ -102,6 +101,45 @@ namespace WorkoutDiary.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
             return RedirectToAction("Index", "Workouts");
+        }
+
+        // Профиль пользователя (GET)
+        [HttpGet]
+        [Authorize]
+        public IActionResult Profile()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        // Загрузка/изменение аватарки (POST)
+        [HttpPost]
+        [Authorize]
+        public IActionResult UploadAvatar(IFormFile avatar)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (avatar != null && avatar.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    avatar.CopyTo(memoryStream);
+                    user.Avatar = memoryStream.ToArray();
+                }
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Profile");
         }
     }
 }

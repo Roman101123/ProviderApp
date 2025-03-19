@@ -19,38 +19,45 @@ namespace WorkoutDiary.Controllers
             _context = context;
         }
 
-        public IActionResult Index(DateTime? date)
+        public IActionResult Index(DateTime? date, int? month, int? year)
         {
             var selectedDate = date ?? DateTime.Today;
+            var currentMonth = month ?? selectedDate.Month;
+            var currentYear = year ?? selectedDate.Year;
+
             var workouts = _context.Workouts
                 .Include(w => w.WorkoutExercises)
                 .ThenInclude(we => we.Exercise)
                 .Where(w => w.Date.Date == selectedDate.Date && w.UserId == GetCurrentUserId())
                 .ToList();
+
+            // Получаем список дат с тренировками для текущего месяца
+            var workoutDates = _context.Workouts
+                .Where(w => w.UserId == GetCurrentUserId() && w.Date.Year == currentYear && w.Date.Month == currentMonth)
+                .Select(w => w.Date.Date)
+                .Distinct()
+                .ToList();
+
             ViewBag.SelectedDate = selectedDate;
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
-                .ToList(); // Упражнения по умолчанию + пользовательские
+                .ToList();
+            ViewBag.CurrentMonth = currentMonth;
+            ViewBag.CurrentYear = currentYear;
+            ViewBag.WorkoutDates = workoutDates;
+
             return View(workouts);
         }
 
         [HttpPost]
         public IActionResult Create(string Note, DateTime Date)
         {
-            // Проверка валидности даты
-            if (Date == default(DateTime))
-            {
-                // Если дата не передана, используем текущую дату
-                Date = DateTime.Today;
-            }
-
             var workout = new Workout
             {
-                Note = string.IsNullOrEmpty(Note) ? null : Note, // Явно обрабатываем пустую заметку
+                Note = Note,
                 Date = Date,
                 UserId = GetCurrentUserId()
             };
-
             try
             {
                 _context.Workouts.Add(workout);
@@ -58,14 +65,13 @@ namespace WorkoutDiary.Controllers
             }
             catch (DbUpdateException ex)
             {
-                // Логируем ошибку для диагностики
                 Console.WriteLine(ex.InnerException?.Message);
                 return BadRequest("Ошибка при сохранении тренировки: " + ex.InnerException?.Message);
             }
-
             return RedirectToAction("Index", new { date = Date });
         }
 
+        // Остальные методы остаются без изменений
         [HttpPost]
         public IActionResult AddExercise(int workoutId, int exerciseId, int sets, int reps, double weight)
         {
@@ -95,7 +101,7 @@ namespace WorkoutDiary.Controllers
             }
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
-                .ToList(); // Упражнения по умолчанию + пользовательские
+                .ToList();
             return View(workout);
         }
 
@@ -139,7 +145,7 @@ namespace WorkoutDiary.Controllers
             }
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
-                .ToList(); // Упражнения по умолчанию + пользовательские
+                .ToList();
             return View(workoutExercise);
         }
 

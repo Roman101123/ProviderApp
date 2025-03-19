@@ -1,0 +1,31 @@
+﻿@model WorkoutDiary.Models.User
+@{
+    ViewData["Title"] = "Профиль пользователя";
+}
+
+<h2>Профиль пользователя</h2>
+
+<div>
+    <p><strong>Логин:</strong> @Model.Username</p>
+    <p><strong>Дата создания аккаунта:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+
+    @if (Model.Avatar != null && Model.Avatar.Length > 0)
+    {
+        <p><strong>Аватар:</strong></p>
+        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Avatar)" alt="Аватар" style="max-width: 200px; max-height: 200px;" />
+        <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data">
+            <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" style="display: none;" id="avatarInputChange" />
+            <label for="avatarInputChange" style="cursor: pointer; padding: 5px 10px; background-color: #4caf50; color: white; border-radius: 5px;">Изменить аватарку</label>
+        </form>
+    }
+    else
+    {
+        <p><strong>Аватар:</strong> Не загружен</p>
+        <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data">
+            <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" style="display: none;" id="avatarInputUpload" />
+            <label for="avatarInputUpload" style="cursor: pointer; padding: 5px 10px; background-color: #2196f3; color: white; border-radius: 5px;">Загрузить аватарку</label>
+        </form>
+    }
+</div>
+
+<a asp-action="Index" asp-controller="Workouts">Назад к дневнику</a>

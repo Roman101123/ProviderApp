@@ -29,6 +29,10 @@
             <a asp-controller="Home" asp-action="Index">Главная</a>
             <a asp-controller="Workouts" asp-action="Index">Дневник</a>
             <a asp-controller="Exercises" asp-action="Index">Упражнения</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Profile">Профиль</a>
+            }
         </nav>
         <div>
             @if (User.Identity.IsAuthenticated)

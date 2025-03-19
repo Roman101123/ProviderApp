@@ -1,14 +1,104 @@
 ﻿@model List<WorkoutDiary.Models.Workout>
 @{
     ViewData["Title"] = "Дневник тренировок";
+
+    var currentMonth = ViewBag.CurrentMonth;
+    var currentYear = ViewBag.CurrentYear;
+    var daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+    var firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
+    var firstDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+    var today = DateTime.Today;
+    var selectedDate = (DateTime)ViewBag.SelectedDate;
+    var workoutDates = (List<DateTime>)ViewBag.WorkoutDates;
 }
 
 <div style="display: flex;">
     <!-- Календарь -->
     <div style="width: 30%; padding: 10px;">
-        <h3>Выберите дату</h3>
-        <form asp-action="Index" method="get">
-            <input type="date" name="date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
+        <h3>Календарь</h3>
+        <form asp-action="Index" method="get" id="calendarForm">
+            <div style="margin-bottom: 10px;">
+                <select name="month" onchange="this.form.submit()">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == currentMonth)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                    }
+                </select>
+                <select name="year" onchange="this.form.submit()">
+                    @for (int i = DateTime.Today.Year - 5; i <= DateTime.Today.Year + 5; i++)
+                    {
+                        <option value="@i" selected="@(i == currentYear)">@i</option>
+                    }
+                </select>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Вс</th>
+                        <th>Пн</th>
+                        <th>Вт</th>
+                        <th>Ср</th>
+                        <th>Чт</th>
+                        <th>Пт</th>
+                        <th>Сб</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int day = 1;
+                        bool started = false;
+                        for (int i = 0; i < 6; i++)
+                        {
+                            <tr>
+                                @for (int j = 0; j < 7; j++)
+                                {
+                                    if (!started && j == firstDayOfWeek)
+                                    {
+                                        started = true;
+                                    }
+                                    if (started && day <= daysInMonth)
+                                    {
+                                        var currentDate = new DateTime(currentYear, currentMonth, day);
+                                        var isToday = currentDate.Date == today.Date;
+                                        var isSelected = currentDate.Date == selectedDate.Date;
+                                        var hasWorkout = workoutDates.Any(d => d == currentDate.Date);
+
+                                        string backgroundColor = "";
+                                        if (isSelected)
+                                        {
+                                            backgroundColor = "background-color: #4caf50;"; // Зеленый для выбранного дня
+                                        }
+                                        else if (isToday)
+                                        {
+                                            backgroundColor = "background-color: #ffeb3b;"; // Желтый для текущего дня
+                                        }
+                                        else if (hasWorkout)
+                                        {
+                                            backgroundColor = "background-color: #2196f3;"; // Синий для дней с тренировками
+                                        }
+
+                                        <td style="text-align: center; @backgroundColor">
+                                            <a href="@Url.Action("Index", new { date = currentDate.ToString("yyyy-MM-dd"), month = currentMonth, year = currentYear })"
+                                               style="display: block; text-decoration: none; color: black; @(isToday || isSelected ? "font-weight: bold;" : "")">
+                                                @day
+                                            </a>
+                                        </td>
+                                        day++;
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                }
+                            </tr>
+                            if (day > daysInMonth)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
         </form>
     </div>
 
@@ -69,15 +159,11 @@
 </div>
 
 <script>
-    // JavaScript для управления кнопкой
     document.addEventListener("DOMContentLoaded", function () {
         const noteInput = document.getElementById("noteInput");
         const submitButton = document.getElementById("submitButton");
 
-        // Проверяем состояние поля при загрузке страницы
         submitButton.disabled = noteInput.value.trim() === "";
-
-        // Проверяем состояние поля при каждом изменении
         noteInput.addEventListener("input", function () {
             submitButton.disabled = noteInput.value.trim() === "";
         });

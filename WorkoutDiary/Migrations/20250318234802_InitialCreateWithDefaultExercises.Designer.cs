@@ -11,8 +11,8 @@ using WorkoutDiary.Data;
 namespace WorkoutDiary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250318195840_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250318234802_InitialCreateWithDefaultExercises")]
+    partial class InitialCreateWithDefaultExercises
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,13 +26,83 @@ namespace WorkoutDiary.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Exercises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDefault = true,
+                            Name = "Приседания"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDefault = true,
+                            Name = "Жим лежа"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsDefault = true,
+                            Name = "Становая тяга"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDefault = true,
+                            Name = "Подтягивания"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsDefault = true,
+                            Name = "Отжимания"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsDefault = true,
+                            Name = "Жим стоя"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsDefault = true,
+                            Name = "Тяга штанги в наклоне"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsDefault = true,
+                            Name = "Скручивания"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsDefault = true,
+                            Name = "Планка"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsDefault = true,
+                            Name = "Бег"
+                        });
                 });
 
             modelBuilder.Entity("WorkoutDiary.Models.User", b =>
@@ -79,7 +149,8 @@ namespace WorkoutDiary.Migrations
 
             modelBuilder.Entity("WorkoutDiary.Models.WorkoutExercise", b =>
                 {
-                    b.Property<int>("WorkoutId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ExerciseId")
@@ -94,11 +165,25 @@ namespace WorkoutDiary.Migrations
                     b.Property<double>("Weight")
                         .HasColumnType("REAL");
 
-                    b.HasKey("WorkoutId", "ExerciseId");
+                    b.Property<int>("WorkoutId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ExerciseId");
 
+                    b.HasIndex("WorkoutId");
+
                     b.ToTable("WorkoutExercises");
+                });
+
+            modelBuilder.Entity("WorkoutDiary.Models.Exercise", b =>
+                {
+                    b.HasOne("WorkoutDiary.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WorkoutDiary.Models.Workout", b =>

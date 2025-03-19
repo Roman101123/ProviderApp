@@ -18,11 +18,11 @@
 
         <!-- Форма для создания новой тренировки -->
         <h3>Добавить тренировку</h3>
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" id="createWorkoutForm">
             <input type="hidden" name="Date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
-            <textarea name="Note" placeholder="Заметка" rows="3" cols="50"></textarea>
+            <textarea name="Note" id="noteInput" placeholder="Заметка" rows="3" cols="50" required></textarea>
             <br />
-            <button type="submit">Сохранить</button>
+            <button type="submit" id="submitButton" disabled>Сохранить</button>
         </form>
 
         <!-- Список тренировок -->
@@ -67,3 +67,19 @@
         }
     </div>
 </div>
+
+<script>
+    // JavaScript для управления кнопкой
+    document.addEventListener("DOMContentLoaded", function () {
+        const noteInput = document.getElementById("noteInput");
+        const submitButton = document.getElementById("submitButton");
+
+        // Проверяем состояние поля при загрузке страницы
+        submitButton.disabled = noteInput.value.trim() === "";
+
+        // Проверяем состояние поля при каждом изменении
+        noteInput.addEventListener("input", function () {
+            submitButton.disabled = noteInput.value.trim() === "";
+        });
+    });
+</script>

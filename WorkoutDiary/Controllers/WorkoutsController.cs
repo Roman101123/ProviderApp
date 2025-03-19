@@ -17,16 +17,6 @@ namespace WorkoutDiary.Controllers
         public WorkoutsController(ApplicationDbContext context)
         {
             _context = context;
-
-            if (!_context.Exercises.Any())
-            {
-                _context.Exercises.AddRange(
-                    new Exercise { Name = "Приседания" },
-                    new Exercise { Name = "Жим лежа" },
-                    new Exercise { Name = "Становая тяга" }
-                );
-                _context.SaveChanges();
-            }
         }
 
         public IActionResult Index(DateTime? date)
@@ -38,21 +28,41 @@ namespace WorkoutDiary.Controllers
                 .Where(w => w.Date.Date == selectedDate.Date && w.UserId == GetCurrentUserId())
                 .ToList();
             ViewBag.SelectedDate = selectedDate;
-            ViewBag.Exercises = _context.Exercises.ToList();
+            ViewBag.Exercises = _context.Exercises
+                .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .ToList(); // Упражнения по умолчанию + пользовательские
             return View(workouts);
         }
 
         [HttpPost]
         public IActionResult Create(string Note, DateTime Date)
         {
+            // Проверка валидности даты
+            if (Date == default(DateTime))
+            {
+                // Если дата не передана, используем текущую дату
+                Date = DateTime.Today;
+            }
+
             var workout = new Workout
             {
-                Note = Note,
+                Note = string.IsNullOrEmpty(Note) ? null : Note, // Явно обрабатываем пустую заметку
                 Date = Date,
                 UserId = GetCurrentUserId()
             };
-            _context.Workouts.Add(workout);
-            _context.SaveChanges();
+
+            try
+            {
+                _context.Workouts.Add(workout);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Логируем ошибку для диагностики
+                Console.WriteLine(ex.InnerException?.Message);
+                return BadRequest("Ошибка при сохранении тренировки: " + ex.InnerException?.Message);
+            }
+
             return RedirectToAction("Index", new { date = Date });
         }
 
@@ -83,7 +93,9 @@ namespace WorkoutDiary.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Exercises = _context.Exercises.ToList(); // Для редактирования упражнений
+            ViewBag.Exercises = _context.Exercises
+                .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .ToList(); // Упражнения по умолчанию + пользовательские
             return View(workout);
         }
 
@@ -115,7 +127,6 @@ namespace WorkoutDiary.Controllers
             return RedirectToAction("Index");
         }
 
-        // Редактирование упражнения (GET)
         [HttpGet]
         public IActionResult EditExercise(int id)
         {
@@ -126,11 +137,12 @@ namespace WorkoutDiary.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Exercises = _context.Exercises.ToList();
+            ViewBag.Exercises = _context.Exercises
+                .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .ToList(); // Упражнения по умолчанию + пользовательские
             return View(workoutExercise);
         }
 
-        // Редактирование упражнения (POST)
         [HttpPost]
         public IActionResult EditExercise(WorkoutExercise workoutExercise)
         {
@@ -147,7 +159,6 @@ namespace WorkoutDiary.Controllers
             return RedirectToAction("Edit", new { id = workoutExercise.WorkoutId });
         }
 
-        // Удаление упражнения
         [HttpGet]
         public IActionResult DeleteExercise(int id)
         {

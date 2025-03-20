@@ -18,6 +18,11 @@ namespace WorkoutDiary.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Exercise>()
+               .HasIndex(e => new { e.Name, e.UserId, e.IsDefault })
+               .IsUnique();
+
             // Начальные данные: 10 упражнений по умолчанию
             modelBuilder.Entity<Exercise>().HasData(
                 new Exercise { Id = 1, Name = "Приседания", IsDefault = true },

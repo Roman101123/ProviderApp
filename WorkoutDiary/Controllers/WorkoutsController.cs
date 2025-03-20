@@ -81,15 +81,17 @@ namespace WorkoutDiary.Controllers
                 return BadRequest("Название упражнения должно содержать минимум 3 символа");
             }
 
-            // Поиск упражнения
             var userId = GetCurrentUserId();
+            var normalizedName = exerciseName.Trim().ToLower();
+
+            // Поиск существующего упражнения
             var exercise = _context.Exercises
                 .FirstOrDefault(e =>
-                    e.Name.ToLower() == exerciseName.Trim().ToLower() &&
-                    (e.UserId == userId || e.IsDefault)
+                    e.Name.ToLower() == normalizedName &&
+                    (e.IsDefault || e.UserId == userId)
                 );
 
-            // Создание нового упражнения
+            // Если упражнение не найдено - создаем новое
             if (exercise == null)
             {
                 exercise = new Exercise
@@ -99,15 +101,19 @@ namespace WorkoutDiary.Controllers
                     IsDefault = false
                 };
                 _context.Exercises.Add(exercise);
+                _context.SaveChanges();
+            }
 
-                try
-                {
-                    _context.SaveChanges();
-                }
-                catch (DbUpdateException ex)
-                {
-                    return BadRequest("Ошибка при сохранении упражнения: " + ex.InnerException?.Message);
-                }
+            // Проверяем, не добавлено ли уже это упражнение в тренировку
+            var existingWorkoutExercise = _context.WorkoutExercises
+                .FirstOrDefault(we =>
+                    we.WorkoutId == workoutId &&
+                    we.ExerciseId == exercise.Id
+                );
+
+            if (existingWorkoutExercise != null)
+            {
+                return BadRequest("Это упражнение уже добавлено в тренировку");
             }
 
             // Добавление в тренировку

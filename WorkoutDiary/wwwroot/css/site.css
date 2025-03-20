@@ -1,22 +1,250 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #212529;
+    color: #e0e0e0;
+}
+
+/* Стили для hero-section */
+.hero-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #343a40 100%);
+    padding: 0 20px;
+}
+
+    .hero-section .content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hero-section h1 {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+/* Анимация пульсации для кнопок */
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* Кастомизация активного пункта меню */
+.nav-link.active {
+    background-color: #0d6efd;
+    border-radius: 5px;
+}
+
+/* Стили для календаря */
+.calendar-container {
+    background-color: #343a40;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .calendar-table th, .calendar-table td {
+        text-align: center;
+        padding: 10px;
+        border: 1px solid #495057;
+    }
+
+    .calendar-table th {
+        background-color: #495057;
+        color: #f8f9fa;
+    }
+
+    .calendar-table td {
+        background-color: #212529;
+        color: #e0e0e0;
+        position: relative;
+    }
+
+        .calendar-table td a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px;
+        }
+
+        .calendar-table td.today {
+            background-color: rgba(255, 235, 59, 0.3);
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .calendar-table td.selected {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .calendar-table td.has-workout {
+            background-color: rgba(33, 150, 243, 0.3);
+            color: #e0e0e0;
+        }
+
+/* Стили для списка тренировок */
+.workout-list {
+    background-color: #343a40;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.workout-item {
+    background-color: #495057;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+    .workout-item h3 {
+        margin-top: 0;
+        color: #f8f9fa;
+    }
+
+    .workout-item textarea {
+        width: 100%;
+        background-color: #212529;
+        color: #e0e0e0;
+        border: 1px solid #495057;
+        border-radius: 4px;
+        padding: 10px;
+    }
+
+    .workout-item ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .workout-item li {
+        background-color: #212529;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .workout-item input[type="number"] {
+        background-color: #343a40;
+        color: #e0e0e0;
+        border: 1px solid #495057;
+        border-radius: 4px;
+        padding: 5px;
+        width: 60px;
+    }
+
+    .workout-item .btn-link {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+
+        .workout-item .btn-link:hover {
+            text-decoration: underline;
+        }
+
+/* Стили для формы добавления тренировки */
+.create-workout-form {
+    margin-bottom: 30px; /* Увеличенный отступ снизу */
+}
+
+/* Стили для формы добавления упражнения */
+.add-exercise-form {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступы между элементами */
+    flex-wrap: wrap; /* Перенос на новую строку, если не помещается */
+}
+
+    .add-exercise-form .exercise-autocomplete {
+        flex: 1; /* Растягиваем поле автодополнения */
+        min-width: 200px;
+    }
+
+    .add-exercise-form input[type="text"],
+    .add-exercise-form input[type="number"] {
+        background-color: #212529;
+        color: #e0e0e0;
+        border: 1px solid #495057;
+        border-radius: 4px;
+        padding: 8px;
+        margin-right: 0; /* Убираем margin-right, используем gap */
+        width: 100px; /* Увеличенный размер полей */
+    }
+
+    .add-exercise-form input[type="number"] {
+        width: 80px; /* Ещё больше для подходов, повторений, веса */
+    }
+
+    .add-exercise-form button {
+        background-color: #0d6efd;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .add-exercise-form button:hover {
+            background-color: #0a58ca;
+        }
+
+/* Анимация для элементов */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

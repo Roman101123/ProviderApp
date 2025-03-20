@@ -2,6 +2,15 @@
     ViewData["Title"] = "Главная";
 }
 
-<h1>Добро пожаловать в дневник тренировок!</h1>
-<p>Войдите, чтобы начать записывать свои тренировки: <a asp-controller="Account" asp-action="Login">Войти</a></p>
-<p>Нет аккаунта? <a asp-controller="Account" asp-action="Register">Зарегистрируйтесь</a></p>
+<div class="hero-section text-center text-white d-flex align-items-center justify-content-center">
+    <div class="content">
+        <h1 class="display-3 fw-bold animate__animated animate__fadeInDown">Добро пожаловать в дневник тренировок!</h1>
+        <p class="lead my-4 animate__animated animate__fadeIn" style="animation-delay: 0.3s;">
+            Записывайте свои тренировки и следите за прогрессом с нами
+        </p>
+        <div class="buttons mt-5">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg pulse me-3">Войти</a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg pulse">Регистрация</a>
+        </div>
+    </div>
+</div>

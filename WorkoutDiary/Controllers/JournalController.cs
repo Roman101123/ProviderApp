@@ -11,11 +11,11 @@ using WorkoutDiary.Models;
 namespace WorkoutDiary.Controllers
 {
     [Authorize]
-    public class JournalController : Controller
+    public class JournalController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public JournalController(ApplicationDbContext context)
+        public JournalController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

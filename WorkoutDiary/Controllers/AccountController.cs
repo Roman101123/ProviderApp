@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WorkoutDiary.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context) : base(context)
         {
             _context = context;
 
@@ -120,7 +120,7 @@ namespace WorkoutDiary.Controllers
                 .Where(e => e.AuthorId == userId)
                 .ToList();
 
-            // Передаем записи через ViewBag или создаем модель представления
+            // Передаем записи через ViewBag
             ViewBag.UserEntries = userEntries;
 
             return View(user);

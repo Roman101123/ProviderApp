@@ -302,6 +302,12 @@ body {
     color: #f8f9fa;
     font-size: 1.2rem;
     margin-bottom: 10px;
+    word-break: break-word; /* Перенос длинных слов */
+    overflow: hidden; /* Скрытие текста, выходящего за пределы */
+    text-overflow: ellipsis; /* Добавление многоточия для обрезанного текста */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Ограничение на 2 строки */
+    -webkit-box-orient: vertical;
 }
 
 .search-form .form-control {
@@ -311,6 +317,12 @@ body {
 }
 
 /* Стили для страниц журнала (создание, редактирование, просмотр) */
+.entry-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
 .entry-details {
     display: flex;
     flex-wrap: wrap;
@@ -322,6 +334,8 @@ body {
         flex: 1;
         padding: 10px;
         min-width: 300px;
+        max-width: 600px; /* Ограничиваем максимальную ширину */
+        word-wrap: break-word; /* Перенос слов */
     }
 
     .entry-details .right {
@@ -330,6 +344,7 @@ body {
         flex-direction: column;
         align-items: center;
         min-width: 300px;
+        max-width: 350px; /* Ограничиваем максимальную ширину */
     }
 
     .entry-details .image-frame {
@@ -362,10 +377,18 @@ body {
 
     .entry-details .left h1 {
         color: #f8f9fa;
+        word-break: break-word; /* Перенос длинных слов в заголовке */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Ограничение на 3 строки */
+        -webkit-box-orient: vertical;
     }
 
     .entry-details .left p {
         color: #e0e0e0;
+        word-break: break-word; /* Перенос слов в тексте */
+        overflow-wrap: break-word; /* Дополнительный перенос слов */
     }
 
     .entry-details .left input,
@@ -393,15 +416,14 @@ body {
         margin: 5px 0;
     }
 
-.actions {
+.entry-actions {
     text-align: center;
     margin-top: 20px;
     padding-bottom: 20px;
-    width: 100%;
 }
 
-    .actions a,
-    .actions button {
+    .entry-actions a,
+    .entry-actions button {
         margin: 0 10px;
         padding: 8px 16px;
         border-radius: 4px;
@@ -409,24 +431,39 @@ body {
         cursor: pointer;
     }
 
-    .actions a {
+    .entry-actions a {
         background-color: #0d6efd;
         color: #fff;
     }
 
-        .actions a:hover {
+        .entry-actions a:hover {
             background-color: #0a58ca;
         }
 
-    .actions button {
+    .entry-actions button {
         background-color: #dc3545;
         color: #fff;
         border: none;
     }
 
-        .actions button:hover {
+        .entry-actions button:hover {
             background-color: #a71d2a;
         }
+
+/* Стили для аватарки в хедере */
+.header-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.header-avatar-placeholder {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #495057;
+}
 
 /* Анимация для элементов */
 .animate-fade-in {

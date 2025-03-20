@@ -40,6 +40,8 @@ namespace WorkoutDiary.Controllers
             ViewBag.SelectedDate = selectedDate;
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .GroupBy(e => e.Name)
+                .Select(g => g.First())
                 .ToList();
             ViewBag.CurrentMonth = currentMonth;
             ViewBag.CurrentYear = currentYear;
@@ -137,6 +139,8 @@ namespace WorkoutDiary.Controllers
             }
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .GroupBy(e => e.Name)
+                .Select(g => g.First())
                 .ToList();
             return View(workout);
         }
@@ -181,6 +185,8 @@ namespace WorkoutDiary.Controllers
             }
             ViewBag.Exercises = _context.Exercises
                 .Where(e => e.IsDefault || e.UserId == GetCurrentUserId())
+                .GroupBy(e => e.Name)
+                .Select(g => g.First())
                 .ToList();
             return View(workoutExercise);
         }

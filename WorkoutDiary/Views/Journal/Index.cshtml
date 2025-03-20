@@ -3,43 +3,47 @@
     ViewData["Title"] = "Журнал тренировок";
 }
 
-<h1>Журнал тренировок</h1>
+<div class="container-fluid">
+    <h1 class="text-white animate-fade-in">Журнал тренировок</h1>
 
-<form method="get" action="@Url.Action("Index")">
-    <input type="text" name="search" placeholder="Поиск по названию" value="@ViewBag.Search" />
-    <button type="submit">Поиск</button>
-</form>
-
-<a asp-action="Create">Добавить запись</a>
-
-<div class="entries">
-    @foreach (var entry in Model)
-    {
-        <div class="entry-tile">
-            @if (entry.Image != null)
-            {
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" />
-            }
-            <h3>@entry.Title</h3>
-            <a asp-action="Details" asp-route-id="@entry.Id">Подробнее</a>
+    <!-- Форма поиска -->
+    <form method="get" action="@Url.Action("Index")" class="search-form animate-fade-in">
+        <div class="input-group mb-3">
+            <input type="text" name="search" class="form-control" placeholder="Поиск по названию" value="@ViewBag.Search" />
+            <button type="submit" class="btn btn-primary">Поиск</button>
         </div>
-    }
-</div>
+    </form>
 
-<style>
-    .entries {
-        display: flex;
-        flex-wrap: wrap;
-    }
+    <!-- Кнопка добавления записи -->
+    <div class="mb-4 animate-fade-in">
+        <a asp-action="Create" class="btn btn-success">Добавить запись</a>
+    </div>
 
-    .entry-tile {
-        margin: 10px;
-        text-align: center;
-    }
-
-        .entry-tile img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
+    <!-- Список записей -->
+    <div class="entries">
+        @if (!Model.Any())
+        {
+            <p class="text-light">Записей пока нет. Добавьте первую!</p>
         }
-</style>
+        else
+        {
+            @foreach (var entry in Model)
+            {
+                <div class="entry-tile animate-fade-in">
+                    @if (entry.Image != null)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" class="entry-image" />
+                    }
+                    else
+                    {
+                        <div class="entry-image-placeholder">
+                            <span>Нет изображения</span>
+                        </div>
+                    }
+                    <h3 class="entry-title">@entry.Title</h3>
+                    <a asp-action="Details" asp-route-id="@entry.Id" class="btn btn-outline-light btn-sm">Подробнее</a>
+                </div>
+            }
+        }
+    </div>
+</div>

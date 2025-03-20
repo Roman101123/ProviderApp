@@ -1,67 +1,40 @@
 ﻿@model WorkoutDiary.Models.JournalEntry
 @{
     ViewData["Title"] = Model.Title;
-    bool isAuthor = ViewBag.IsAuthor ?? false; // Используем ViewBag
+    bool isAuthor = ViewBag.IsAuthor ?? false;
 }
 
-<div class="entry-details">
-    <div class="left">
-        <h1>@Model.Title</h1>
-        <p>@Model.Content</p>
+<div class="container-fluid">
+    <div class="entry-details animate-fade-in">
+        <div class="left">
+            <h1 class="text-white">@Model.Title</h1>
+            <p>@Model.Content</p>
+        </div>
+        <div class="right">
+            @if (Model.Image != null)
+            {
+                <div class="image-frame">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image)" alt="@Model.Title" />
+                </div>
+            }
+            else
+            {
+                <div class="image-frame">
+                    <div class="placeholder">Нет изображения</div>
+                </div>
+            }
+            <p>Автор: @Model.Author.Username</p>
+            <p>Дата создания: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+        </div>
     </div>
-    <div class="right">
-        @if (Model.Image != null)
-        {
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image)" alt="@Model.Title" />
-        }
-        <p>Автор: @Model.Author.Username</p>
-        <p>Дата создания: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
-    </div>
+
+    @if (isAuthor)
+    {
+        <div class="actions animate-fade-in">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Редактировать</a>
+            <form method="post" asp-action="Delete" asp-route-id="@Model.Id" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить эту запись?');">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+        </div>
+    }
 </div>
-
-@if (isAuthor)
-{
-    <div class="actions">
-        <a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
-        <form method="post" asp-action="Delete" asp-route-id="@Model.Id" onsubmit="return confirm('Вы уверены, что хотите удалить эту запись?');">
-            <button type="submit">Удалить</button>
-        </form>
-    </div>
-}
-
-<style>
-    .entry-details {
-        display: flex;
-    }
-
-    .left {
-        flex: 1;
-        padding: 10px;
-    }
-
-    .right {
-        flex: 1;
-        padding: 10px;
-        text-align: center;
-    }
-
-        .right img {
-            max-width: 100%;
-            height: auto;
-        }
-
-    .actions {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-        .actions a, .actions button {
-            margin: 0 10px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-        }
-</style>

@@ -137,10 +137,10 @@
                                     @we.Exercise.Name -
                                     Подходы: <input type="number" class="edit-sets" value="@we.Sets" min="1" />
                                     Повторения: <input type="number" class="edit-reps" value="@we.Reps" min="1" />
-                                    Вес: <input type="number" class="edit-weight" value="@we.Weight" step="0.1" min="0" /> кг
+                                    Вес: <input type="number" class="edit-weight" value="@we.Weight" step="1" min="1" /> кг
                                     <form asp-action="DeleteExercise" method="post" style="display: inline;">
                                         <input type="hidden" name="id" value="@we.Id" />
-                                        <button type="submit" class="btn btn-link" onclick="return confirm('Вы уверены, что хотите удалить это упражнение?')">Удалить</button>
+                                        <span class="delete-exercise" onclick="if(confirm('Вы уверены, что хотите удалить это упражнение?')) this.closest('form').submit();">×</span>
                                     </form>
                                     <span class="save-status" style="color: green; display: none;">✓</span>
                                 </li>
@@ -162,7 +162,7 @@
                             </div>
                             <input type="number" name="sets" class="form-control" placeholder="Подходы" required min="1" />
                             <input type="number" name="reps" class="form-control" placeholder="Повторения" required min="1" />
-                            <input type="number" name="weight" class="form-control" placeholder="Вес (кг)" step="0.1" required min="0" />
+                            <input type="number" name="weight" class="form-control" placeholder="Вес (кг)" step="1" required min="1" />
                             <button type="submit" class="btn btn-primary">Добавить</button>
                         </form>
                         <div class="mt-3">

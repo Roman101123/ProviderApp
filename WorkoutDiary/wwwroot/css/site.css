@@ -187,7 +187,7 @@ body {
 
 /* Стили для формы добавления тренировки */
 .create-workout-form {
-    margin-bottom: 30px; /* Увеличенный отступ снизу */
+    margin-bottom: 30px;
 }
 
 /* Стили для формы добавления упражнения */
@@ -195,13 +195,13 @@ body {
     margin-top: 10px;
     display: flex;
     align-items: center;
-    gap: 10px; /* Отступы между элементами */
-    flex-wrap: wrap; /* Перенос на новую строку, если не помещается */
+    gap: 15px; /* Увеличенный отступ между элементами */
+    flex-wrap: wrap;
 }
 
     .add-exercise-form .exercise-autocomplete {
-        flex: 1; /* Растягиваем поле автодополнения */
-        min-width: 200px;
+        flex: 1;
+        min-width: 250px; /* Увеличенная ширина для поля автодополнения */
     }
 
     .add-exercise-form input[type="text"],
@@ -211,12 +211,15 @@ body {
         border: 1px solid #495057;
         border-radius: 4px;
         padding: 8px;
-        margin-right: 0; /* Убираем margin-right, используем gap */
-        width: 100px; /* Увеличенный размер полей */
+        margin-right: 0;
+    }
+
+    .add-exercise-form input[type="text"] {
+        width: 100%; /* Поле автодополнения растягивается на всю доступную ширину */
     }
 
     .add-exercise-form input[type="number"] {
-        width: 80px; /* Ещё больше для подходов, повторений, веса */
+        width: 100px; /* Увеличенная ширина для полей подходов, повторений, веса */
     }
 
     .add-exercise-form button {
@@ -248,3 +251,24 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Стили для крестика удаления упражнения */
+.exercise-item {
+    position: relative; 
+    padding-right: 30px; 
+}
+
+.delete-exercise {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #dc3545; 
+    font-size: 1.5rem; 
+    cursor: pointer;
+    line-height: 1;
+}
+
+    .delete-exercise:hover {
+        color: #a71d2a; 
+    }

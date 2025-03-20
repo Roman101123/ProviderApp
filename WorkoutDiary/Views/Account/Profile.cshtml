@@ -4,95 +4,60 @@
     var userEntries = ViewBag.UserEntries as List<WorkoutDiary.Models.JournalEntry> ?? new List<WorkoutDiary.Models.JournalEntry>();
 }
 
-<h2>Профиль пользователя</h2>
+<div class="profile-container">
+    <div class="profile-info">
+        <h2>Профиль @Model.Username</h2>
+        <p><strong>Дата создания аккаунта:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
 
-<div class="profile-info">
-    <p><strong>Логин:</strong> @Model.Username</p>
-    <p><strong>Дата создания аккаунта:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
-
-    @if (Model.Avatar != null && Model.Avatar.Length > 0)
-    {
-        <p><strong>Аватар:</strong></p>
-        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Avatar)" alt="Аватар" style="max-width: 200px; max-height: 200px;" />
-        <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data">
-            <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" style="display: none;" id="avatarInputChange" />
-            <label for="avatarInputChange" style="cursor: pointer; padding: 5px 10px; background-color: #4caf50; color: white; border-radius: 5px;">Изменить аватарку</label>
-        </form>
-    }
-    else
-    {
-        <p><strong>Аватар:</strong> Не загружен</p>
-        <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data">
-            <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" style="display: none;" id="avatarInputUpload" />
-            <label for="avatarInputUpload" style="cursor: pointer; padding: 5px 10px; background-color: #2196f3; color: white; border-radius: 5px;">Загрузить аватарку</label>
-        </form>
-    }
-</div>
-
-<h3>Мои записи</h3>
-@if (userEntries.Any())
-{
-    <div class="entries">
-        @foreach (var entry in userEntries)
+        @if (Model.Avatar != null && Model.Avatar.Length > 0)
         {
-            <div class="entry-tile">
-                @if (entry.Image != null)
-                {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" />
-                }
-                <h4>@entry.Title</h4>
-                <a asp-controller="Journal" asp-action="Details" asp-route-id="@entry.Id">Подробнее</a>
-            </div>
+            <p><strong>Аватар:</strong></p>
+            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Avatar)" alt="Аватар" class="avatar-image" />
+            <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data" class="avatar-upload-form">
+                <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" id="avatarInputChange" style="display: none;" />
+                <label for="avatarInputChange" class="avatar-upload-label change">Изменить аватарку</label>
+            </form>
+        }
+        else
+        {
+            <p><strong>Аватар:</strong></p>
+            <div class="avatar-placeholder">Не загружен</div>
+            <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data" class="avatar-upload-form">
+                <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" id="avatarInputUpload" style="display: none;" />
+                <label for="avatarInputUpload" class="avatar-upload-label upload">Загрузить аватарку</label>
+            </form>
         }
     </div>
-}
-else
-{
-    <p>У вас пока нет записей.</p>
-}
 
-<div class="back-link">
-    <a asp-action="Index" asp-controller="Workouts">Назад к дневнику</a>
+    <div class="entries-section">
+        <h3>Мои записи</h3>
+        @if (userEntries.Any())
+        {
+            <div class="entries">
+                @foreach (var entry in userEntries)
+                {
+                    <div class="entry-tile">
+                        @if (entry.Image != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" />
+                        }
+                        <h4>@entry.Title</h4>
+                        <a asp-controller="Journal" asp-action="Details" asp-route-id="@entry.Id">Подробнее</a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="no-entries">У вас пока нет записей.</p>
+        }
+    </div>
+
+    <div class="back-link">
+        <a asp-action="Index" asp-controller="Workouts">Назад к дневнику</a>
+    </div>
 </div>
 
-<style>
-    .profile-info {
-        margin-bottom: 30px;
-    }
-
-    .entries {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    .entry-tile {
-        text-align: center;
-        width: 150px;
-    }
-
-        .entry-tile img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .entry-tile h4 {
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        .entry-tile a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-            .entry-tile a:hover {
-                text-decoration: underline;
-            }
-
-    .back-link {
-        margin-top: 20px;
-    }
-</style>
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" />
+}

@@ -1,0 +1,169 @@
+﻿/* Стили для страницы профиля пользователя */
+.profile-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #343a40 100%);
+    min-height: 100vh;
+}
+
+.profile-info {
+    background-color: #343a40;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+    .profile-info h2 {
+        color: #f8f9fa;
+        margin-bottom: 20px;
+    }
+
+    .profile-info p {
+        color: #e0e0e0;
+        margin: 10px 0;
+    }
+
+        .profile-info p strong {
+            color: #f8f9fa;
+        }
+
+    .profile-info .avatar-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    .profile-info .avatar-placeholder {
+        width: 200px;
+        height: 200px;
+        background-color: #495057;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e0e0e0;
+        margin: 10px 0;
+    }
+
+    .profile-info .avatar-upload-form {
+        margin-top: 10px;
+    }
+
+    .profile-info .avatar-upload-label {
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 5px;
+        color: #fff;
+        display: inline-block;
+    }
+
+        .profile-info .avatar-upload-label.upload {
+            background-color: #2196f3;
+        }
+
+            .profile-info .avatar-upload-label.upload:hover {
+                background-color: #1976d2;
+            }
+
+        .profile-info .avatar-upload-label.change {
+            background-color: #4caf50;
+        }
+
+            .profile-info .avatar-upload-label.change:hover {
+                background-color: #388e3c;
+            }
+
+.entries-section h3 {
+    color: #f8f9fa;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.entries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.entry-tile {
+    background-color: #343a40;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    animation: fadeIn 0.5s ease-in;
+}
+
+    .entry-tile:hover {
+        transform: translateY(-5px);
+    }
+
+    .entry-tile img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .entry-tile h4 {
+        color: #f8f9fa;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        word-break: break-word; /* Перенос длинных слов */
+        overflow: hidden; /* Скрытие текста, выходящего за пределы */
+        text-overflow: ellipsis; /* Добавление многоточия для обрезанного текста */
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Ограничение на 2 строки */
+        -webkit-box-orient: vertical;
+    }
+
+    .entry-tile a {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+
+        .entry-tile a:hover {
+            text-decoration: underline;
+        }
+
+.no-entries {
+    color: #e0e0e0;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.back-link {
+    margin-top: 20px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+    .back-link a {
+        color: #0d6efd;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        background-color: #343a40;
+        display: inline-block;
+    }
+
+        .back-link a:hover {
+            background-color: #495057;
+        }
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

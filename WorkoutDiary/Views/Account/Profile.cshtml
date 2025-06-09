@@ -1,13 +1,13 @@
 ﻿@model WorkoutDiary.Models.User
 @{
-    ViewData["Title"] = "Профиль пользователя";
-    var userEntries = ViewBag.UserEntries as List<WorkoutDiary.Models.JournalEntry> ?? new List<WorkoutDiary.Models.JournalEntry>();
+    ViewData["Title"] = "Профиль клиента";
 }
 
 <div class="profile-container">
     <div class="profile-info">
-        <h2>Профиль @Model.Username</h2>
-        <p><strong>Дата создания аккаунта:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+        <h2>Профиль: @Model.Username</h2>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Дата регистрации:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
 
         @if (Model.Avatar != null && Model.Avatar.Length > 0)
         {
@@ -15,7 +15,7 @@
             <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Avatar)" alt="Аватар" class="avatar-image" />
             <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data" class="avatar-upload-form">
                 <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" id="avatarInputChange" style="display: none;" />
-                <label for="avatarInputChange" class="avatar-upload-label change">Изменить аватарку</label>
+                <label for="avatarInputChange" class="avatar-upload-label change">Изменить аватар</label>
             </form>
         }
         else
@@ -24,37 +24,29 @@
             <div class="avatar-placeholder">Не загружен</div>
             <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data" class="avatar-upload-form">
                 <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" id="avatarInputUpload" style="display: none;" />
-                <label for="avatarInputUpload" class="avatar-upload-label upload">Загрузить аватарку</label>
+                <label for="avatarInputUpload" class="avatar-upload-label upload">Загрузить аватар</label>
             </form>
         }
     </div>
 
     <div class="entries-section">
-        <h3>Мои записи</h3>
-        @if (userEntries.Any())
+        <h3>Ваш тариф</h3>
+        @if (Model.CurrentTariff != null)
         {
-            <div class="entries">
-                @foreach (var entry in userEntries)
-                {
-                    <div class="entry-tile">
-                        @if (entry.Image != null)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(entry.Image)" alt="@entry.Title" />
-                        }
-                        <h4>@entry.Title</h4>
-                        <a asp-controller="Journal" asp-action="Details" asp-route-id="@entry.Id">Подробнее</a>
-                    </div>
-                }
+            <div class="entry-tile">
+                <h4>@Model.CurrentTariff.Name</h4>
+                <p>Скорость: @Model.CurrentTariff.Speed Мбит/с</p>
+                <p>Цена: @Model.CurrentTariff.Price ₽/мес</p>
             </div>
         }
         else
         {
-            <p class="no-entries">У вас пока нет записей.</p>
+            <p class="no-entries">У вас не выбран тариф.</p>
         }
     </div>
 
     <div class="back-link">
-        <a asp-action="Index" asp-controller="Workouts">Назад к дневнику</a>
+        <a asp-controller="Home" asp-action="Index">На главную</a>
     </div>
 </div>
 

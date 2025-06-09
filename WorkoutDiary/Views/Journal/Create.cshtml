@@ -1,27 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Добавить запись";
+﻿@model WorkoutDiary.Models.Client
+
+@{
+    ViewData["Title"] = "Добавить клиента";
 }
 
 <div class="container-fluid">
-    <h1 class="text-white animate-fade-in">Добавить запись</h1>
+    <h1 class="text-white animate-fade-in">Добавить клиента</h1>
 
     <form method="post" enctype="multipart/form-data" class="entry-details animate-fade-in">
         <div class="left">
             <div class="mb-3">
-                <label for="title" class="form-label">Название:</label>
-                <input type="text" id="title" name="title" class="form-control" required />
+                <label for="FullName" class="form-label">ФИО:</label>
+                <input type="text" id="FullName" name="FullName" class="form-control" required />
             </div>
             <div class="mb-3">
-                <label for="content" class="form-label">Текст записи:</label>
-                <textarea id="content" name="content" class="form-control" required></textarea>
+                <label for="Address" class="form-label">Адрес:</label>
+                <input type="text" id="Address" name="Address" class="form-control" />
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Изображение:</label>
-                <input type="file" id="image" name="image" class="form-control" accept="image/*" />
+                <label for="Email" class="form-label">Email:</label>
+                <input type="email" id="Email" name="Email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label for="TariffId" class="form-label">Тариф:</label>
+                <select id="TariffId" name="TariffId" class="form-control">
+                    @foreach (var tariff in ViewBag.Tariffs)
+                    {
+                        <option value="@tariff.Id">@tariff.Name (@tariff.Speed Мбит/с — @tariff.Price ₽)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="ConnectedDate" class="form-label">Дата подключения:</label>
+                <input type="date" id="ConnectedDate" name="ConnectedDate" class="form-control" />
             </div>
         </div>
-        <div class="actions">
-            <button type="submit" class="btn btn-primary">Опубликовать</button>
+        <div class="actions mt-3">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
         </div>
     </form>
 </div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace WorkoutDiary.Models
 {
@@ -7,14 +8,27 @@ namespace WorkoutDiary.Models
         public int Id { get; set; }
 
         [Required]
-        public string Username { get; set; }
+        [Display(Name = "Логин")]
+        public string Username { get; set; } = null!;
 
         [Required]
-        public string PasswordHash { get; set; } // Храним хэш пароля
-
-        public byte[]? Avatar { get; set; } // Аватарка как бинарные данные, nullable
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; } = null!;
 
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Дата создания аккаунта
+        [Display(Name = "Пароль (хэш)")]
+        public string PasswordHash { get; set; } = null!;
+
+        [Display(Name = "Аватар")]
+        public byte[]? Avatar { get; set; }
+
+        [Display(Name = "Дата создания")]
+        public DateTime CreatedAt { get; set; }
+
+        [Display(Name = "Тариф")]
+        public int? CurrentTariffId { get; set; }
+
+        public Tariff? CurrentTariff { get; set; }
     }
 }

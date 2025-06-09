@@ -1,0 +1,30 @@
+﻿@model WorkoutDiary.Models.Client
+@{
+    ViewData["Title"] = "Информация о клиенте";
+}
+
+<div class="container mt-4">
+    <h1 class="text-white">@Model.FullName</h1>
+
+    <dl class="row text-white">
+        <dt class="col-sm-3">Адрес</dt>
+        <dd class="col-sm-9">@Model.Address</dd>
+
+        <dt class="col-sm-3">Телефон</dt>
+        <dd class="col-sm-9">@Model.Phone</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Дата подключения</dt>
+        <dd class="col-sm-9">@Model.ConnectedAt.ToString("dd.MM.yyyy")</dd>
+
+        <dt class="col-sm-3">Тариф</dt>
+        <dd class="col-sm-9">@Model.Tariff?.Name</dd>
+    </dl>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Редактировать</a>
+        <a asp-action="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</div>

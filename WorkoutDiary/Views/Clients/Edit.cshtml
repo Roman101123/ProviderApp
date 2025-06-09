@@ -1,0 +1,64 @@
+﻿@model WorkoutDiary.Models.Client
+
+@{
+    ViewData["Title"] = "Редактировать клиента";
+}
+
+<div class="container-fluid">
+    <h1 class="text-white animate-fade-in">Редактировать клиента</h1>
+
+    <form method="post" enctype="multipart/form-data" class="entry-details animate-fade-in">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="left">
+            <div class="mb-3">
+                <label for="FullName" class="form-label">ФИО:</label>
+                <input type="text" id="FullName" name="FullName" class="form-control" value="@Model.FullName" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="Address" class="form-label">Адрес:</label>
+                <input type="text" id="Address" name="Address" class="form-control" value="@Model.Address" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Phone" class="form-label">Телефон:</label>
+                <input type="tel" id="Phone" name="Phone" class="form-control" value="@Model.Phone" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email:</label>
+                <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" />
+            </div>
+
+            <div class="mb-3">
+                <label for="TariffId" class="form-label">Тариф:</label>
+                <select id="TariffId" name="TariffId" class="form-control">
+                    @foreach (var tariff in ViewBag.Tariffs)
+                    {
+                        if (tariff.Id == Model.TariffId)
+                        {
+                            <option value="@tariff.Id" selected>
+                                @tariff.Name (@tariff.Speed Мбит/с – @tariff.Price ₽)
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@tariff.Id">
+                                @tariff.Name (@tariff.Speed Мбит/с – @tariff.Price ₽)
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+
+        <div class="right">
+            <p>Дата подключения: @Model.ConnectedAt.ToString("dd.MM.yyyy")</p>
+        </div>
+
+        <div class="actions mt-3">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</div>

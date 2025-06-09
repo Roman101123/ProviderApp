@@ -2,7 +2,7 @@
 <html lang="ru" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - Дневник тренировок</title>
+    <title>@ViewData["Title"] - Интернет-провайдер</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -12,25 +12,25 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Дневник тренировок</a>
+                <a class="navbar-brand" href="#">Интернет-провайдер</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index") ? "active" : "")" asp-controller="Home" asp-action="Index">Главная</a>
+                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Home") ? "active" : "")" asp-controller="Home" asp-action="Index">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Workouts") ? "active" : "")" asp-controller="Workouts" asp-action="Index">Дневник</a>
+                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Clients") ? "active" : "")" asp-controller="Clients" asp-action="Index">Клиенты</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Journal") ? "active" : "")" asp-controller="Journal" asp-action="Index">Журнал</a>
+                            <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Tariffs") ? "active" : "")" asp-controller="Tariffs" asp-action="Index">Тарифы</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["Action"]?.ToString() == "Profile") ? "active" : "")" asp-controller="Account" asp-action="Profile">Профиль</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["Action"]?.ToString() == "Profile") ? "active" : "")" asp-controller="Account" asp-action="Profile">Личный кабинет</a>
                             </li>
                         }
                     </ul>
@@ -64,7 +64,7 @@
         @RenderBody()
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-auto">
-        <p class="mb-0">© 2025 Дневник тренировок</p>
+        <p class="mb-0">© 2025 Интернет-провайдер</p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
